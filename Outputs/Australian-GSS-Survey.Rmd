@@ -14,6 +14,8 @@ toc: FALSE
 bibliography: references.bib 
 ---
 
+  \tableofcontents
+
 ```{r, include=FALSE}
 options(tinytex.verbose = TRUE)
 ```
@@ -322,6 +324,24 @@ Our assumptions and rationale behind the sudden changes between the years 2019 a
 
 ## Next Steps
 With the tables and graphs that we have created, we were able to properly observe and compare the 2019 and 2020 GSS survey results which well portrayed the dramatic shift that people had to go through during the pandemic. Moving on, it would be interesting to conduct an analysis that spans over the years of 2019, 2020, 2021 and 2022 as COVID-19 had, and still is, impacting our daily lives and changing the way we function in the world. There could be a comparison on the changes that occurred during the beginning of the pandemic to the ‘end’ of the pandemic, analyzing how we have learned to adapt to live with the virus and reopening the economy by lifting restrictions. It would be interesting to see the change in the statistics of education level attained, employment rates, health status, smoking status, and social involvement once restrictions are lifted.
+
+\newpage
+# Appendix
+## Link to Survey
+https://forms.gle/S5rmAzTXxkQfvwbk9
+
+## Images of Survey
+![Survey introduction](/Users/julia/Australian-GSS-Survey/Survey/1.png)
+
+![Questions](/Users/julia/Australian-GSS-Survey/Survey/2.png)
+
+![Questions](/Users/julia/Australian-GSS-Survey/Survey/3.png)
+
+![Questions](/Users/julia/Australian-GSS-Survey/Survey/4.png)
+
+![Questions](/Users/julia/Australian-GSS-Survey/Survey/5.png)
+
+![Thank you message](/Users/julia/Australian-GSS-Survey/Survey/6.png)
 
 \newpage
 # References
