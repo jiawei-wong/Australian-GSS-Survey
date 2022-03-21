@@ -1,0 +1,332 @@
+---
+title: "The Pandemic’s Impact on Australian Citizens’ Life Experience in 2020"
+author: "Min Chang & Julia Wong"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  bookdown::pdf_document2:
+    fig_caption: yes
+header-includes:
+  \usepackage{float}
+  \floatplacement{figure}{H}
+abstract: "Using data from the Australian General Social Survey (GSS), we explore the effect of the COVID-19 pandemic on the social experiences and wellbeing of people in Australia. Statistics across different categories within the dataset share a common characteristic: a drastic change in numbers between 2019 and 2020. Country restrictions to curb the spread of the disease such as lockdowns caused an increase in unemployment rates despite the increasing number of people graduating with a bachelor or higher level degree and an improvement in health conditions despite the ongoing of an highly contagious disease with severe symptoms. A further analysis of the data leads to a better understanding of the unexpected reports in 2020."
+thanks: 'Code and data are available at: https://github.com/jiawei-wong/Australian-GSS-Survey'
+toc: FALSE
+bibliography: references.bib 
+---
+
+```{r, include=FALSE}
+options(tinytex.verbose = TRUE)
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(knitr)
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(kableExtra)
+library(bibtex)
+library(bookdown)
+library(tinytex)
+```
+
+# Introduction
+The COVID-19 pandemic has affected the day to day lives of people from every part of the world, including Australia. The unforeseen emergence of the virus alongside its spread at an alarmingly fast rate stunned countries across the world as they were dangerously unprepared for a major outbreak like this. While in search of a vaccine, governments across the world implemented nationwide restrictions as an effort to slow down the spread of the virus. Around mid-March 2020, the Australian government had established movement restrictions such as bans on non-essential gatherings and travel plans [@lies]. 
+
+The pandemic has impacted the world in both positive and negative ways. Employment rates have dropped with companies laying employees off and halting recruitment activities. Educational programs have moved to an online delivery mode due to restrictions of in-person gatherings in indoor spaces. Physical and mental health conditions of people have changed, with some people seeing the pandemic as the perfect opportunity to become healthier whereas some experiencing mental stressors due to financial issues, lack of human interaction, and more. 
+
+In this report, we will first look at the number of participants involved in the survey conducted by the Australian Bureau of Statistics, comparing the number of participants in 2019 and 2020. We will then look into the relationship between the labour force status of citizens and their educational level as well as the pandemic. We will also develop an understanding behind the changes in the reported health conditions of citizens during the pandemic. Finally, we will explore the correlation between smoking and social involvement which have both decreased among citizens after the occurrence of COVID-19. 
+
+```{r, include=FALSE}
+raw_data <- read_csv(here::here("inputs/data/raw_data.csv"))
+
+### Grabbing specific rows ###
+cleaned_australian_data <- raw_data |>
+  as_tibble() |>
+  slice(5, 6, 13, 14, 24, 29, 66:74, 83:95, 129)
+```
+
+# Data
+## Data Source
+This report examines data from the 2020 General Social Survey (GSS) published by the Australian Bureau of Statistics that includes data from 2019 and 2020 that provides an overview on the social characteristics, wellbeing and social experiences of people before and during the COVID-19 outbreak [@citeDatawebsite]. Data was collected through conducting a GSS survey in Australia. The 2020 dataset was collected in the span of approximately 4 months, from June 15th to September 5th in 2020, whereas the 2019 dataset was collected in the span of approximately 3 months, from April 29th to July 20th in 2019 [@citeDatawebsite]. Using these two datasets, we observed the changes encountered by Australians after the occurrence of the pandemic. 
+
+As the survey was not done in every region of Australia, the results of the survey had to be converted into estimates for the entire population of Australia. This was done by a process called ‘weighting’ [@citeDatawebsite]. The process of weighting is when individuals or households are given a number known as the ‘weight’. This number then reflects the number of people or households they represent in the entire population. For instance, if the probability of being selected in the survey was 1 in 50, the individual or household would represent 50 people. After this process, the weight is then calibrated to align with the independent estimates of the scope population [@citeDatawebsite].
+
+## Methodology and Data Collection
+The GSS survey contains two collection methods that result in different collected data. The first method is a ‘Household Form’ which is completed by an adult within a household who is 18 years and older. Its purpose is to collect basic demographic information about a resident within a household [@citeDatawebsite]. Residents who are younger than 18 years old are also eligible to complete the form with acquired permission from an adult. The second method is the ‘Individual Questionnaire’ which is completed by a resident who is 15 years and older who was randomly chosen to complete the household form [@citeDatawebsite].
+
+This analysis utilizes the `R` programming language for statistical computing and graphics [@citeR]. The `tidyverse` [@R-tidyverse] package is downloaded for access to other essential R packages. The package `dplyr` [@R-dplyr] allowed us to manipulate and construct new variables from the data. Graphs are created using `ggplot2` [@R-ggplot2] and tables are created using `kableExtra` [@R-kableExtra] to visually demonstrate the key findings. The `knitr` [@R-knitr], `bookdown` [@R-bookdown], `tinytex`[@R-tinytex] and `bibtex` [@R-bibtex] packages are used to create the R markdown report and reference literature used.
+
+We downloaded the 2020 Australian General Social Survey as an excel document from the website and imported the dataset to R, which automatically translates it into a csv file. The raw data includes 131 observations and 8 variables. The variables were incapable of effectively conveying the meaning of the data as they were merely the name of the publisher, “Australian Bureau of Statistics”, and meaningless numbers, “..2, ..3, ..4”. This dataset required a lot of cleaning before we were able to create variables that are easy to interpret and utilize to create graphs and tables. 
+
+We began by deciding on specific topics that we wanted to discuss and removed the rows that were irrelevant. This left us with a cleaned dataset that includes the social life, health, smoking status, employment and educational level of Australians in 2019 and 2020. We created separate data frames by grabbing rows and columns on specific data topics and the year that it was associated with. We renamed the variables into the topic name, males, females, total and created a new variable, ‘year’, using the mutate function from the `dplyr` [@R-dplyr] package. Lastly, we combined the data frames of each topic by years and ended up with one data frame for each topic that has the summary statistics of both 2019 and 2020.
+
+## Key features and Strengths 
+The survey conducted that led to this dataset holds key features that were useful while we conducted this analysis. Firstly, this dataset reflects on the social characteristics, experiences, and physical wellbeing of Australians, showing that the country cares about its citizens' life quality. Secondly, the survey ensures to acquire data on how Australians feel about 
+
+The survey conducted that led to this dataset holds key features that were useful while we conducted this analysis. It ensured that data about how Australians feel about their lives, opportunities and experiences when living in the country were collected. For example, their thoughts on life satisfaction, personal stressors, involvement in social groups, financial stressor, and more [@citeDatawebsite]. This led to a dataset that reflects on the social characteristics, experiences, and wellbeing of citizens as well as information that encompasses contrasting perspectives on life. Furthermore, the survey also collects information from diverse groups within the Australian population, yielding to a multi-perspective view on life in Australia. The presence of physical and mental health conditions, disabilities as well as being different in terms of ethnicity, beliefs, sexual orietation, and immigrant status affect the life satisfaction rate of individuals.
+
+## Weaknesses
+The change in methodologies used to collect data between 2019 and 2020 must be considered when comparing the data. COVID-19 protocols such as nationwide lockdowns have shifted the data collection process from being conducted in-person to virtually. It is scientifically proven that people are more likely to lie in person than online. [@lies]. Additionally, the data from 2020 would not be as accurate as the data from 2019 as the number of non-respondents were higher in 2020 [@citeDatawebsite].
+
+## Discussion of the Questionnaire
+There are both pros and cons to the GSS survey. One of the pros is that the questions are detailed and in a well organized format. The overall process is easy to follow and the next steps on what to do are clear. The questions and answer choices are transparent as well. This shows that the survey aims to acquire data regarding the experience of all citizens no matter their social status in society. Acquiring and putting forward data raises awareness of the potentially poor experiences of the less privileged in low socio-economic areas [@citeDatawebsite] could help inform the government about what the society is lacking in, allowing improvements to be implemented. 
+
+One of the cons of this survey is that some questions are difficult to answer for younger individuals below 18 years old. For instance, questions associated with sexual orientation can be a sensitive topic to those who are still in the adolescent stage. Furthermore, the survey also contains personal questions that could trigger people, especially questions related to health, smoking and emotional feelings [@trigger]. Lastly, there could potentially be dishonesty in answers as people often lie to fit into the social norm. Modification of answers and dishonesty when answering are common in questionnaires. This leads to a less accurate dataset that could hinder improvements in society [@dishonesty].
+
+# Results
+After an in-depth analysis of the Australian GSS Survey dataset, we learned that COVID-19 led to both positive and negative situations. Although country restrictions led to a reduction in leisure activities such as group and socialization events, people have learned to become more aware of their personal health and were introduced to methods that helped them stay sane while not being able to socially interact with others [@brains]. The pandemic in 2020 gave the world a unique opportunity to explore different perspectives and learn more about themselves. 
+
+# Discussion
+## Survey Participants
+COVID-19 has drastically shifted human life in various ways for the past two years. Thus, prompting our interest in analyzing this dataset with a focus on the changes in the survey answers before the pandemic in 2019 and during the pandemic in 2020. The first noticeable change is the increase in survey participants in 2020 (Table \@ref(tab:totalfig)). The mandatory restrictions implemented throughout Australia that prohibits citizens from outdoor and public activities to curb the spread of the disease left them with no choice but to quarantine at home [@covid19]. A quarantine period that was expected to only last at most two weeks ended up lasting for more than a year. Long quarantine periods have caused a case of 'pandemic boredom', a problem that people around the world faced during the peak of the pandemic [@boredom]. Repetition of the same activities while staying at home has caused people to become stir-crazy, feel dull, and lose motivation in everyday life. With more time on hand and an eagerness for new activities, the increase in survey participants during the pandemic could be due to a desire to distract themselves from pandemic boredom. Moreover, as mentioned in the data section, an option to participate in the survey through virtual phone or video calls could also attract people’s attention in participating as it serves as human interaction and reduces the feeling of loneliness [@covid19].
+
+```{r totalfig, fig.cap="Number of Australians that Contributed to the Survey in 2019 and 2020", echo=FALSE, warning=FALSE, message=FALSE, fig.width=8}
+
+total_reports_2019 <- cleaned_australian_data |>
+  slice(1, 2, 29) |>
+  select(-1, -2, -3, -4, -5, -6, -7, -8) |>
+  mutate(year = 2019,
+         males = 9807,
+         females = 10164.1,
+         total = 20010.8) |>
+  slice(1)
+
+total_reports_2020 <- cleaned_australian_data |>
+  slice(1, 2, 36) |>
+  select(-1, -2, -3, -4, -5) |>
+  mutate(year = 2020,
+         males = 9955.5,
+         females = 10325.2,
+         total = 20265.2) |>
+  slice(1) |>
+  select(-1, -2, -3)
+
+total_reports <- rbind(total_reports_2019, total_reports_2020) |> #merging two dataframes
+  ceiling() #round up decimals
+  
+total_reports |>
+  knitr::kable(caption = "Number of Australians that Contributed to the Survey in 2019 and 2020",
+               col.names = c("Year", "Male", "Female", "Total"),
+               booktabs = TRUE) |>
+  kable_classic(full_width = T) |>
+  kable_styling(latex_options = "HOLD_position")
+```
+## Labour Force Status
+Diving into the data that portrays the answers of the survey participants, an interesting observation made is the reduction in the number of people working full-time or part-time and the increase in the number of people who are unemployed in 2020 as compared to 2019 (Figure \@ref(fig:employmentfig)). As a public health measure, countries worldwide, including Australia, implemented mandatory lockdowns which caused many small and ‘unessential’ businesses to temporarily close for business. That often led to permanent closures as businesses were unable to afford building rent due to not making any profit, resulting in loss of jobs. Additionally, unlike larger companies, smaller companies were incapable of providing financial support to their employees and had no choice but to decrease the number of employees and halt recruitment activities [@earlyimpacts]. Hence, the decrease in employment and increase in unemployment rates during the pandemic. 
+
+However, it is interesting to note that the employment rate has decreased amidst the evident increase in bachelor level and above degrees earned in 2020 (Figure \@ref(fig:educationlevelfig)). This proves that the issue is not that there is a lack of talent within the community but a lack of employment opportunities due to COVID-19. 
+
+```{r employmentfig, fig.cap="Increase in Number of Unemployed Citizens in 2020", echo=FALSE, warning=FALSE, message=FALSE, fig.width=8}
+
+education_employment <- cleaned_australian_data |>
+  slice(1, 2, 16:27)
+
+employment_2019 <- education_employment |>
+  select(1:4) |>
+  slice(5:8) |>
+  rename(c("labour_force_status" = "Australian Bureau of Statistics", "males" = "...2", "females" = "...3", "total" = "...4")) |>
+  mutate(year = 2019,
+         males = as.numeric(males),
+         females = as.numeric(females),
+         total = as.numeric(total)) |>
+  mutate_if(is.numeric, ~round(., 0)) #to round up numeric columns
+
+employment_2020 <- education_employment |>
+  select(1, 6:8) |>
+  slice(5:8) |>
+  rename(c("labour_force_status" = "Australian Bureau of Statistics", "males" = "...6", "females" = "...7", "total" = "...8")) |>
+  mutate(year = 2020,
+         males = as.numeric(males),
+         females = as.numeric(females),
+         total = as.numeric(total)) |>
+  mutate_if(is.numeric, ~round(., 0)) #to round up numeric columns
+
+employment_status <- rbind(employment_2019, employment_2020) |>
+  select(-2, -3) |>
+  slice(-4, -8) |>
+  group_by(year)
+
+employment_status |>
+  ggplot(aes(year, total, fill = labour_force_status), las=1) +
+  geom_bar(stat = "identity") +
+  ylim(0, 15000) +
+  geom_text(aes(label=total), size = 4, position = position_stack(vjust = 0.5)) +
+  scale_fill_brewer() +
+  scale_x_continuous(breaks = employment_status$year) +
+  labs(x = "Year", y = "Number of People", fill = "Employment Type",
+       title = "Number of People in the Labour Force by Employment Type in 2019 and 2020") +
+  theme_light()
+```
+
+## Education Level Attained
+There are several potential reasons behind the sudden increase in university degrees earned. COVID-19 measures caused universities to deliver courses online which gave students flexibility in their schedules as they were able to work at their own pace. This creates a better work ethic which increases their chances of graduating. The ability to attend courses online was also very convenient and time efficient as students did not have to commute to classes [@online]. Furthermore, students have shifted from taking exams in-person to online, making it easier for them to pass exams as they were open-book. An increase in passing grades among final year students also leads to an increase in graduation rate and degrees earned. 
+
+```{r educationlevelfig, fig.cap="Increase in Number of Bachelor and Above Degrees Earned in 2020", echo=FALSE, warning=FALSE, message=FALSE, fig.width=8}
+education_2019 <- education_employment |>
+  select(1:4) |> #select 2019 data
+  slice(-1:-11) |> #select education data
+  rename(c("education_level" = "Australian Bureau of Statistics", "males" = "...2", "females" = "...3", "total" = "...4")) |>
+  mutate(year = 2019,
+         males = as.numeric(males),
+         females = as.numeric(females),
+         total = as.numeric(total)) |>
+  mutate_if(is.numeric, ~round(., 0)) #to round up numeric columns
+
+education_2020 <- education_employment |>
+  select(1, 6:8) |>
+  slice(12:14) |>
+  rename(c("education_level" = "Australian Bureau of Statistics", "males" = "...6", "females" = "...7", "total" = "...8")) |>
+  mutate(year = 2020,
+         males = as.numeric(males),
+         females = as.numeric(females),
+         total = as.numeric(total)) |>
+  mutate_if(is.numeric, ~round(., 0)) #to round up numeric columns
+
+education_level <- rbind(education_2019, education_2020) |>
+  select(-2, -3) |>
+  filter(education_level == "Bachelor Degree or above")
+
+education_level |>
+  ggplot(aes(year, total)) +
+  geom_line() +
+  ylim(0, 8000) +
+  scale_x_continuous(breaks = education_level$year) +
+  geom_point() +
+  labs(x = "Year", y = "Number of Degrees Earned (Bachelor's and Above)",
+       title = "Increase of Bachelor's and Above Degrees Earned between 2019 and 2020")+
+  theme_light()
+```
+
+## Health Status
+Aside from changes in the areas of labour forces and education, changes can also be identified in the reported health status of Australians in 2020. Surprisingly, the data shows that there has been an improvement in health among Australians in 2020 during the times of COVID-19 (Figure \@ref(fig:healthstatusfig)). There has been a 1.8% increase in health statuses reported under ‘Excellent/Very good’, 2.5% increase in ‘Good’, and a 2.6% decrease in ‘Fair/Poor’. The pandemic is likely to have spurred people to pay closer attention to their overall health. According to Ongevalle, there has been an increase in everyday physical activity and improvement in diet due to COVID-19 restrictions. One of the only activities that people are able to participate in were individual outdoor sports such as cycling and jogging. Closure of indoor dinings also led to more home-cooked food which are healthier [@mental]. Additionally, with more personal time due to staying at home for school or work, people now have more time on hand to take care of their health. Although, it must be noted that there are people who report symptoms of anxiety or depression due to the inability to go outside, meet people, as well as stressors stemming from job losses and financial issues. Without further information on what categories of health (eg. physical or mental) contributed to this data about people’s health status, we are unable to further explore other reasons behind the sudden improvement in health during such tough times.
+
+```{r healthstatusfig, fig.cap="Health Status of Australian Citizens in 2019 and 2020", echo=FALSE, warning=FALSE, message=FALSE, fig.width=10}
+#Cleaning data
+health_social <- cleaned_australian_data |>
+  slice(1:14)
+
+health_status_2019 <- health_social |>
+  slice(8:10) |>
+  select(1:4) |>
+  rename(c("health_status" = "Australian Bureau of Statistics", "males" = "...2", "females" = "...3", "total" = "...4")) |>
+  mutate(year = 2019,
+         males = as.numeric(males),
+         females = as.numeric(females),
+         total = as.numeric(total)) |>
+  mutate_if(is.numeric, ~round(., 0))
+
+health_status_2020 <- health_social |>
+  slice(8:10) |>
+  select(1, 6:8) |>
+  rename(c("health_status" = "Australian Bureau of Statistics", "males" = "...6", "females" = "...7", "total" = "...8")) |>
+  mutate(year = 2020,
+         males = as.numeric(males),
+         females = as.numeric(females),
+         total = as.numeric(total)) |>
+  mutate_if(is.numeric, ~round(., 0))
+
+health_status <- rbind(health_status_2019, health_status_2020) |>
+  select(-2, -3)
+
+health_status |>
+  ggplot(aes(x = health_status, y = total, fill = health_status)) +
+  geom_bar(position="dodge", stat="identity") +
+  geom_text(aes(label = total), vjust = -0.2) + #include labels of values
+  facet_wrap(~year) +
+  scale_fill_brewer() +
+  theme_light() +
+  labs(x = "Health Status", y = "Number of People", fill = "Health Status",
+       title = "Health Status of Australians in 2019 and 2020")
+```
+
+### Number of Smokers
+Digging further into the reported health improvement among Australians, we analyzed and compared data regarding the smoker status of citizens in 2019 and 2020.  Initially, we assumed that there would be an increase of smokers as smoking is associated with high stress that is faced by many during the pandemic. However, we found that there has been a reduction in smokers and an increase in non-smokers in 2020 (Figure \@ref(fig:smokerscountfig)). This statistic could be due to people’s new attention to their personal health as mentioned previously. As people are increasingly aware of COVID-19’s effect on human lungs and the painful symptoms that come with it, smokers are increasingly afraid and attempt to quit smoking [@smokers]. Smokers have weaker lungs than non-smokers. Thus, if they were diagnosed with COVID-19, the symptoms could be worse than normal as the lungs are already weak before getting infected by the virus. Additionally, people wanted to be in an overall good health status to avoid getting infected and understand that smoking only worsens their health. But, we believe that the biggest contributor could be the lack of involvement in social events and groups.
+
+```{r smokerscountfig, fig.cap="Number of Smokers in 2019 and 2020", echo=FALSE, warning=FALSE, message=FALSE, fig.width=8}
+smoker_status_2019 <- health_social |>
+  select(1:4) |>
+  slice(13, 14) |>
+  rename(c("smoker_status" = "Australian Bureau of Statistics", "males" = "...2", "females" = "...3", "total" = "...4")) |>
+  mutate(year = 2019,
+         males = as.numeric(males),
+         females = as.numeric(females),
+         total = as.numeric(total)) |>
+  mutate_if(is.numeric, ~round(., 0)) #to round up numeric columns
+  
+smoker_status_2020 <- health_social |>
+  select(1, 6:8) |>
+  slice(13, 14) |>
+  rename(c("smoker_status" = "Australian Bureau of Statistics", "males" = "...6", "females" = "...7", "total" = "...8")) |>
+  mutate(year = 2020,
+         males = as.numeric(males),
+         females = as.numeric(females),
+         total = as.numeric(total)) |>
+  mutate_if(is.numeric, ~round(., 0)) #to round up numeric columns
+
+smoker_status <- rbind(smoker_status_2019, smoker_status_2020) |>
+  select(-2, -3)
+
+smoker_status |>
+  ggplot(aes(x = year, y = total, fill = smoker_status)) +
+  geom_bar(position="dodge", stat="identity") +
+  scale_fill_brewer() +
+  scale_x_continuous(breaks = smoker_status$year) +
+  labs(x = "Year", y = "Number of People", fill = "Smoking Status",
+       title = "Number of Smokers and Non-Smokers in 2019 and 2020") +
+  theme_light()
+```
+
+### Smoking as a Social Construct
+To test our assumption of the correlation between smoking and social outings, we analyzed the data regarding people’s involvement in social groups in 2019 and 2020. As expected due to lockdowns, involvement in social groups have decreased by 8.3% in 2020 from 2019 (Figure \@ref(fig:sociallifefig)). According to Johnson and Jennison, both drinking and smoking are greatly correlated with social group affiliations [@social]. People tend to drink and smoke more when they are involved in social groups or events to fit into the social circle that they are in. As mentioned throughout this paper, countries and cities had to implement lockdowns due to COVID-19 which resulted in less opportunity for social gatherings. This leads to the decrease in smoking among social smokers, contributing to the decrease in people categorized under ‘currently smokes’ in 2020 (Figure \@ref(fig:smokerscountfig)).
+
+```{r sociallifefig, fig.cap="Citizens' Involvement in Social Groups in 2019 and 2020", echo=FALSE, warning=FALSE, message=FALSE, fig.width=8}
+social_life_2019 <- health_social|>
+  slice(4) |>
+  select(1:4) |>
+  rename(c("social_life" = "Australian Bureau of Statistics", "males" = "...2", "females" = "...3", "total" = "...4")) |>
+  mutate(year = 2019,
+         males = as.numeric(males),
+         females = as.numeric(females),
+         total = as.numeric(total)) |>
+  mutate_if(is.numeric, ~round(., 0))
+
+social_life_2020 <- health_social|>
+  slice(4) |>
+  select(1, 6:8) |>
+  rename(c("social_life" = "Australian Bureau of Statistics", "males" = "...6", "females" = "...7", "total" = "...8")) |>
+  mutate(year = 2020,
+         males = as.numeric(males),
+         females = as.numeric(females),
+         total = as.numeric(total)) |>
+  mutate_if(is.numeric, ~round(., 0))
+
+social_life <- rbind(social_life_2019, social_life_2020) |>
+  select(-2, -3) |>
+  group_by(year)
+
+social_life |>
+  ggplot(aes(x = year, y = total)) +
+  geom_bar(position ="dodge", stat = "identity") +
+  geom_text(aes(label = total), hjust = 1.5, size = 5) +
+  scale_x_continuous(breaks = social_life$year) +
+  theme_light() +
+  labs(x = "Year", y = "Number of People Involved in Social Groups",
+       title = "Involvement in Social Groups in 2019 and 2020") +
+  coord_flip()
+```
+
+## Weaknesses
+Our assumptions and rationale behind the sudden changes between the years 2019 and 2020 were only COVID-19 related. There could have been other factors that led to these statistical changes too. For example, a contrasting demographic profile of survey participants and method of conducting the survey that could lead to biases and dishonest answers in 2019 and 2020. We chose to focus on COVID-19 as the biggest factor in this number change because of its impact on human lives in 2020. 
+
+## Next Steps
+With the tables and graphs that we have created, we were able to properly observe and compare the 2019 and 2020 GSS survey results which well portrayed the dramatic shift that people had to go through during the pandemic. Moving on, it would be interesting to conduct an analysis that spans over the years of 2019, 2020, 2021 and 2022 as COVID-19 had, and still is, impacting our daily lives and changing the way we function in the world. There could be a comparison on the changes that occurred during the beginning of the pandemic to the ‘end’ of the pandemic, analyzing how we have learned to adapt to live with the virus and reopening the economy by lifting restrictions. It would be interesting to see the change in the statistics of education level attained, employment rates, health status, smoking status, and social involvement once restrictions are lifted.
+
+\newpage
+# References
+
+
+
+
+
